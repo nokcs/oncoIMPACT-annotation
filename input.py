@@ -19,7 +19,7 @@ for line in f:
 print "# annotations ", len(annotations)
 
 # datasets = {"BLCA", "COAD", "GBM", "LIHC", "LUAD", "OV", "PRAD"}
-datasets = {"GBM"}
+datasets = {"STAD"}
 
 allTopAnnotatedDrivers = []
 
@@ -29,7 +29,7 @@ for dataset in datasets:
     print dataset
 
     #read annotated drivers
-    filename = mypath + "output/0.05_25/" + dataset + "_DRIVER_ANNOTATION.dat"
+    filename = mypath + "output/0.05_20/" + dataset + "_DRIVER_ANNOTATION.dat"
 #     print filename
     annotatedDrivers = []
     f = open(filename, 'r')
@@ -51,8 +51,8 @@ for dataset in datasets:
     print "# all annotated drivers ", len(annotatedDrivers), " (have annotation > top)"
 
     #read top drivers
-    filename = mypath + "oncoIMPACT-results/" + dataset + "/ONCOIMPACT/LATEST/driver_list.txt"
-#     print filename
+    #filename = mypath + "oncoIMPACT-results/" + dataset + "/ONCOIMPACT/LATEST/driver_list.txt"
+    filename = mypath + "output/0.05_20/driver_list.txt"
     topDrivers = []
     count = 0
     f = open(filename, 'r')
@@ -104,7 +104,7 @@ uniqueAnnotationInUsed = list(set(annotationInUsed))
 print len(uniqueAnnotationInUsed)
 
 colName = uniqueAnnotationInUsed
-outFilename = 'annotation_matrix_' + str(numTopDrivers) + 'drivers_' + str(numTopAnnotation) + 'annnotations_GBM.dat'
+outFilename = 'annotation_matrix_' + str(numTopDrivers) + 'drivers_' + str(numTopAnnotation) + 'annnotations_STAD.dat'
 f = open(outFilename,'w')
 f.write('\t'.join(uniqueAnnotationInUsed) + "\n")
 

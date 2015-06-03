@@ -2,7 +2,7 @@ setwd("/home/nok/workspace/oncoIMPACT-annotation/")
 library("gplots")
 
 
-pdf(file="20drivers_20annnotations_STAD.pdf",
+pdf(file="20drivers_20annnotations_GBM.pdf",
 	paper="special",
 	width=20,
 	height=20
@@ -16,7 +16,7 @@ par(lwd = 2)  #The line width
 palette <- colorRampPalette(c('#00CC00','#000000'))(10) #10 colors
 
 #read input
-profile <- read.table("annotation_matrix_20drivers_20annnotations_STAD.dat", header = TRUE)
+profile <- read.table("annotation_matrix_20drivers_20annnotations_GBM.dat", header = TRUE)
 profile_mat = as.matrix(profile)
 numDataset <- 1
 numTopDrivers <- 20

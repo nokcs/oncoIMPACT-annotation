@@ -2,8 +2,8 @@ from collections import Counter
 import os
 
 mypath = "./"
-numTopDrivers = 10
-numTopAnnotation = 10
+numTopDrivers = 20
+numTopAnnotation = 20
 numCol = numTopAnnotation * 2 + 3
 
 os.chdir(mypath)
@@ -18,7 +18,8 @@ for line in f:
     annotations.append(line.strip())
 print "# annotations ", len(annotations)
 
-datasets = {"BLCA", "COAD", "GBM", "LIHC", "LUAD", "OV", "PRAD"}
+# datasets = {"BLCA", "COAD", "GBM", "LIHC", "LUAD", "OV", "PRAD"}
+datasets = {"STAD"}
 
 allTopAnnotatedDrivers = []
 
@@ -28,24 +29,30 @@ for dataset in datasets:
     print dataset
 
     #read annotated drivers
-    filename = mypath + "output/0.05_25/" + dataset + "_DRIVER_ANNOTATION.dat"
+    filename = mypath + "output/0.05_20/" + dataset + "_DRIVER_ANNOTATION.dat"
 #     print filename
     annotatedDrivers = []
     f = open(filename, 'r')
     for line in f:
         #print line,
-        annotatedDriver = line.split("\t")
+        annotatedDriver = line.strip().split("\t")
         #print annotatedDriver[0]
         if len(annotatedDriver) >= numCol:
             annotatedDrivers.append(annotatedDriver[0:numCol-1])
-#         else:
-#             print annotatedDriver[0], " ",
-#     print
+        else:
+            #fill in the blank
+            numAnnotationToFill = numCol - len(annotatedDriver)
+            for i in range(0, numAnnotationToFill):
+                annotatedDriver.append('NA')
+                annotatedDriver.append('0')
+#             print annotatedDriver
+            annotatedDrivers.append(annotatedDriver[0:numCol-1])
+            
     print "# all annotated drivers ", len(annotatedDrivers), " (have annotation > top)"
 
     #read top drivers
     filename = mypath + "oncoIMPACT-results/" + dataset + "/ONCOIMPACT/LATEST/driver_list.txt"
-#     print filename
+    filename = mypath + "oncoIMPACT-results/" + dataset + "/ONCOIMPACT/LATEST/driver_list.txt"
     topDrivers = []
     count = 0
     f = open(filename, 'r')
@@ -69,18 +76,20 @@ for dataset in datasets:
     print "# annotated top drivers ", len(annotatedTopDrivers)
             
     #create list dictionary for each driver
+    i = 1
     for annotatedTopDriver in annotatedTopDrivers:
         #print annotatedTopDriver[2 : 2 * top]
         
         #[gene name: frequency]
-        a = dict(annotatedTopDriver[i:i+2] for i in range(2, 2*top, 2))
+        a = dict(annotatedTopDriver[i:i+2] for i in range(2, 2*numTopAnnotation, 2))
         
         #convert freq string to float
         for key, value in a.iteritems():
             a[key] = float(value)
             
-        da = [dataset + "_" + annotatedTopDriver[0], a]
+        da = [dataset + "_" + str(i) + "_" + annotatedTopDriver[0], a]
         allTopAnnotatedDrivers.append(da)
+        i = i + 1
 
 #get only annotations that are annotated to the drivers
 annotationInUsed = []
@@ -95,7 +104,7 @@ uniqueAnnotationInUsed = list(set(annotationInUsed))
 print len(uniqueAnnotationInUsed)
 
 colName = uniqueAnnotationInUsed
-outFilename = 'annotation_matrix_' + str(top) + '.dat'
+outFilename = 'annotation_matrix_' + str(numTopDrivers) + 'drivers_' + str(numTopAnnotation) + 'annnotations_GBM.dat'
 f = open(outFilename,'w')
 f.write('\t'.join(uniqueAnnotationInUsed) + "\n")
 

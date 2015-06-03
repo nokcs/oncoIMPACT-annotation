@@ -12,6 +12,7 @@
 #include <map>
 #include <algorithm>
 #include <ctime>
+#include <typeinfo>
 #include "header/input_output.h"
 #include "header/calculator.h"
 
@@ -24,15 +25,23 @@ using namespace std;
 int main( int argc, char *argv[] ) {
 
 
-	if ( argc != 5 ){ // argc should be 4 for correct execution
-	    cout<<"usage: "<< argv[0] <<" <input_final_module> <output_prefix> <cutoff> <top_n_annotations>\n";
+	if ( argc != 6 ){ // argc should be 4 for correct execution
+	    cout<<"Usage: "<< argv[0] <<" <annotation_db_dir> <input_final_module> <output_prefix> <cutoff> <top_n_annotations>\n";
+	    cout<<"Example: "<< argv[0] <<" MSigDB/ FINAL_MODULE.dat output/GBM_ 0.05 50\n\n";
+	    cout<<"Description:\n";
+	    cout<<"\t<annotation_db_dir> = path to MSigDB directory\n";
+	    cout<<"\t<input_final_module> = the final module results of OncoIMPACT\n";
+	    cout<<"\t<output_prefix> = prefix of the output files. The prefix can be both directory name and prefix of filename\n";
+	    cout<<"\t<cutoff> = cutoff for hypergeometric test\n";
+	    cout<<"\t<top_n_annotations> = number of top annotations for each driver\n";
 	}else {
 
-		string moduleFileName = argv[1];
-		string outputPrefix = argv[2];
+		string mSigDbPath = argv[1];
+		string moduleFileName = argv[2];
+		string outputPrefix = argv[3];
 
-		double cutoff = atof(argv[3]);
-		int top = atoi(argv[4]);
+		double cutoff = atof(argv[4]);
+		int top = atoi(argv[5]);
 
 		/*
 		 * Start timer
@@ -49,11 +58,11 @@ int main( int argc, char *argv[] ) {
 
 		//read gene sets from MSigDB
 		vector<string> filenames;
-		filenames.push_back("MSigDB/h.all.v5.0.symbols.gmt");		//hallmark
-	//	filenames.push_back("MSigDB/c2.all.v5.0.symbols.gmt");		//pathway databases
-		filenames.push_back("MSigDB/c2.cp.kegg.v5.0.symbols.gmt");	//KEGG
-		filenames.push_back("MSigDB/c5.all.v5.0.symbols.gmt");		//GO
-	//	filenames.push_back("MSigDB/c6.all.v5.0.symbols.gmt");
+		filenames.push_back(mSigDbPath + "h.all.v5.0.symbols.gmt");		//hallmark
+	//	filenames.push_back(mSigDbPath + "c2.all.v5.0.symbols.gmt");		//pathway databases
+		filenames.push_back(mSigDbPath + "c2.cp.kegg.v5.0.symbols.gmt");	//KEGG
+		filenames.push_back(mSigDbPath + "c5.all.v5.0.symbols.gmt");		//GO
+	//	filenames.push_back(mSigDbPath + "c6.all.v5.0.symbols.gmt");
 
 		vector<string> geneSetNames;
 		vector<string> geneSetUrls;
@@ -68,12 +77,13 @@ int main( int argc, char *argv[] ) {
 
 		cout << "\tnumber of gene sets = "  << numGeneSets << endl;
 
-		vector<string> outStr;
-		string filename = "annotation_list.txt";
-		for (int i = 0; i < numGeneSets; ++i) {
-			outStr.push_back(geneSetNames[i]);
-		}
-		writeStrVector(filename.c_str(), &outStr);
+		//printing annotation list for plotting
+//		vector<string> outStr;
+//		string filename = "annotation_list.txt";
+//		for (int i = 0; i < numGeneSets; ++i) {
+//			outStr.push_back(geneSetNames[i]);
+//		}
+//		writeStrVector(filename.c_str(), &outStr);
 
 		//read oncoIMPACT final modules and combine driver, phenotype, and explained genes for each module
 		cout << "reading oncoIMPACT modules for annotation ...\n";
