@@ -101,23 +101,23 @@ int main( int argc, char *argv[] ) {
 		int numSamples = samplesList.size();
 
 		cout << "\tnumber of modules = "  << numModules << " and number of samples = " << numSamples <<  endl;
+		cout << "annotating ... ";
 
 		//get size of gene sets and overlap
 		list<GeneSetPair> geneSetPairs;
 
-		cout << "annotating ... ";
 		int progress = 1;
 		int interval = numModules / 100;
 
 		for (int i = 0; i < numModules; ++i) {
 
-			//print progression
-			if (i % interval == 0) {
-				const string progStatus = intToStr(progress) + "%";
-				cout << progStatus << flush;
-				progress++;
-				cout << string(progStatus.length(), '\b');
-			}
+//			//print progression
+//			if (i % interval == 0) {
+//				const string progStatus = intToStr(progress) + "%";
+//				cout << progStatus << flush;
+//				progress++;
+//				cout << string(progStatus.length(), '\b');
+//			}
 
 			vector<string> currentModuleMembers = moduleMembers[i];
 			vector<string> currentModuleDrivers = moduleDrivers[i];
